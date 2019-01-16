@@ -1,44 +1,40 @@
 <?php
 namespace Framework\Http;
 
+use Framework\Http\Interfaces\RequestInterface;
+
 class Request implements RequestInterface
 {
-    protected $method;
     protected $get;
     protected $post;
     protected $files;
     protected $server;
     protected $session;
-    protected $path;
+    protected $cookies;
 
-    public function __construct($get, $post, $files, $server, $session)
+    public function __construct(Get $get,Post $post,Files $files, Server $server,Session $session,Cookies $cookies)
     {
         $this->get = $get;
         $this->post = $post;
         $this->files = $files;
         $this->server = $server;
         $this->session = $session;
-        $this->path = $server['REQUEST_URI'] ?? '';
-        $this->method = $server['REQUEST_METHOD'] ?? null;
-    }
-
-    protected function getType(){
-
+        $this->cookies = $cookies;
     }
 
     public function method(): string
     {
-        return $this->method;
+        return strtolower($this->server->method());
     }
 
-    public function get(string $key = null)
+    public function get(string $key = null, $default = null)
     {
-        return $this->get;
+        return $key ? ($this->get->$key ?? $default) : $this->get;
     }
 
-    public function post(string $key = null)
+    public function post(string $key = null, $default = null)
     {
-        return $this->post;
+        $key ? ($this->post->$key ?? $default) : $this->post;
     }
 
     public function files()
@@ -46,19 +42,21 @@ class Request implements RequestInterface
         return $this->files;
     }
 
-    public function server($key = null)
+    public function server($key = null, $default = null)
     {
-        return $this->server;
+        return $key ? ($this->server->$key ?? $default) : $this->server;
     }
 
-    public function session(string $key = null)
+    public function session(string $key = null, $default = null)
     {
-        return $this->session;
+        return $key ? ($this->session->$key ?? $default) : $this->session;
     }
 
     public function wantsJson(): bool
     {
-        // TODO: Implement wantsJson() method.
+        if (preg_match('/json/', $this->server('HTTP_ACCEPT')))
+            return true;
+        return false;
     }
 
     public function put(string $key, $value): RequestInterface
@@ -68,6 +66,11 @@ class Request implements RequestInterface
 
     public function path(): string
     {
-        return $this->path;
+        return $this->server->getPath();
+    }
+
+    public function cookies(string $key = null, $default = null)
+    {
+        return $key ? ($this->cookies->$key ?? $default) : $this->cookies;
     }
 }

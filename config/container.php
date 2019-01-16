@@ -1,6 +1,6 @@
 <?php
 return [
     'isProd' => function() {
-        return false;
-    }
+        return true; //TODO return (bool)app()->make(Config::class)->prod
+    },
 ];

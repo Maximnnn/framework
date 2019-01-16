@@ -1,7 +1,8 @@
 <?php
 namespace Framework\Http;
 
-interface ResponseInterface
+
+class Files extends RequestData
 {
 
 }

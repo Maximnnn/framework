@@ -1,9 +1,12 @@
 <?php
 return [
     'get' => [
-        '/home' => function(){echo 123;}
+        '/framework/public/home' => function(){return new \Framework\Http\Response\HtmlResponse('home');}
     ],
     'post' => [
 
+    ],
+    'cli' => [
+        '' => '\App\Controllers\Console\ConsoleRouter@index'
     ]
 ];

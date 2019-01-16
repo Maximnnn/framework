@@ -1,23 +1,24 @@
 <?php
 namespace Framework\Factories;
 
-use Framework\Collection;
+use Framework\Http\Cookies;
+use Framework\Http\Files;
+use Framework\Http\Get;
+use Framework\Http\Post;
 use Framework\Http\Request;
+use Framework\Http\Server;
+use Framework\Http\Session;
 
 class RequestFactory
 {
-    public function __construct()
-    {
-    }
-
-    public function fromGlobals() {
+    public function fromGlobals(){
         return new Request(
-            new Collection($_GET),
-            new Collection($_POST),
-            new Collection($_FILES),
-            new Collection($_SERVER),
-            new Collection($_SESSION)
+            new Get($_GET),
+            new Post($_POST),
+            new Files($_FILES),
+            new Server($_SERVER),
+            new Session($_SESSION ?? []),
+            new Cookies($_COOKIE)
         );
     }
-
 }

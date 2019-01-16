@@ -1,38 +1,35 @@
 <?php namespace Framework;
 
 
+use Framework\Exceptions\BaseException;
+
 class Container {
+
+    use singleInstanceTrait;
 
     private $storage = [];
     private $closures = [];
-
-    protected static $instance;
-
-    public static function instance():Container {
-        if (!static::$instance) {
-            static::$instance = new self();
-        }
-        return static::$instance;
-    }
 
     public function __construct()
     {
         $this->storage[get_class($this)] = $this;
     }
 
-    public function register(string $className, callable $func, $single = true) {
+    public function register(string $className, $func, $single = false) {
         $this->closures[$className] = [
             'call' => $func,
             'single' => $single
-        ];
+            ];
         return $this;
     }
 
-    /**
-     * @param $className
-     * @param $parameters array
-     * @return object $className
-     */
+    public function registerSingleton(string $className, $func = null) {
+        $this->closures[$className] = [
+            'call' => $func,
+            'single' => true
+        ];
+    }
+
     public function make($className, array $parameters = []) {
         if (isset($this->closures[$className])) {
             if ($this->closures[$className]['single'] !== true) {
@@ -62,33 +59,40 @@ class Container {
         return new $className(...$params);
     }
 
-    protected function resolveParameters($parameters, array $reflectionParameters = null) {
+    public function resolveParameters($parameters, array $reflectionParameters = null) {
 
         $return = [];
 
         if ($reflectionParameters) foreach ($reflectionParameters as $key => $parameter) {
             /**@var $parameter \ReflectionParameter*/
-            if ($parameter->getClass()) {
+            if (isset($parameters[$key])) {
+                $value = $parameters[$key];
+                if ($this->isParamAffordable($parameter, $value)) {
+                    $return[] = $value;
+                } else {
+                    $this->error($parameter);
+                }
+            } else if ($parameter->getClass()) {
                 $value = $this->make($parameter->getClass()->getName());
                 if (!$value)
-                    throw new \Exception('unresolved parameter');
+                    $this->error($parameter);
                 $return[] = $value;
             } else if (isset($parameters[$parameter->getName()])) {
                 $value = $parameters[$parameter->getName()];
                 if ($this->isParamAffordable($parameter, $value)){
                     $return[] = $value;
                 } else {
-                    throw new \Exception('unresolved parameter ' . $parameter->getName());
+                    $this->error($parameter);
                 }
             } else if (isset($parameters[$key])) {
                 $value = $parameters[$key];
                 if ($this->isParamAffordable($parameter, $value)) {
                     $return[] = $value;
                 } else {
-                    throw new \Exception('unresolved parameter');
+                    $this->error($parameter);
                 }
-            } else {
-                throw new \Exception('unresolved parameter ' . $parameter->getName());
+            } else if (!$parameter->isOptional()) {
+                $this->error($parameter);
             }
         }
 
@@ -129,5 +133,9 @@ class Container {
     public function __call($name, $arguments)
     {
         return $this->make($name, $arguments);
+    }
+
+    protected function error(\ReflectionParameter $parameter) {
+        throw d(new BaseException('unresolved parameter "' . $parameter->getName() . '"'));
     }
 }

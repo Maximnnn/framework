@@ -1,23 +1,29 @@
 <?php
 namespace Framework\Pipeline;
 
-abstract class Handler
+class Handler implements HandlerInterface
 {
     /**
      * @var $next Handler
      */
     protected $next;
+    protected $nextMethod;
 
-    public function next(Handler $handler){
+    public function next($handler, $method = 'handle'){
         $this->next = $handler;
+        $this->nextMethod = $method;
         return $handler;
     }
 
-    public function handle($data = null) {
-        if ($this->next)
-            return $this->next->handle($data);
+    protected function callNext(array $params = []){
+        if ($this->next) {
+            $method = $this->nextMethod;
+            $reflection = new \ReflectionMethod($this->next, $method);
+            $params = app()->resolveParameters($params, $reflection->getParameters());
+            return $this->next->$method(...$params);
+        }
 
-        return $data;
+        return null;
     }
 
 }

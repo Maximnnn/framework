@@ -12,6 +12,6 @@ function dj($arr) {
     die;
 }
 
-function app() {
+function app():\Framework\Container {
      return \Framework\Container::instance();
 }
