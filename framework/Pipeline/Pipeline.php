@@ -12,7 +12,7 @@ class Pipeline extends Handler
         return $this;
     }
 
-    public function pipe(){
+    public function pipe(array $data = []){
         $first = $this;
         $next = null;
         foreach ($this->pipeline as $class) {
@@ -23,7 +23,7 @@ class Pipeline extends Handler
             }
         }
 
-        return $this->callNext();
+        return $this->callNext($data);
     }
 
     protected function makeObj($class) {

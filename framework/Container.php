@@ -136,6 +136,6 @@ class Container {
     }
 
     protected function error(\ReflectionParameter $parameter) {
-        throw d(new BaseException('unresolved parameter "' . $parameter->getName() . '"'));
+        throw new BaseException('unresolved parameter "' . $parameter->getName() . '"');
     }
 }

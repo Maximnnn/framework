@@ -1,12 +1,13 @@
 <?php
 return [
     'get' => [
-        '/framework/public/home' => function(){return new \Framework\Http\Response\HtmlResponse('home');}
+        '/framework/public/' => 'ExampleController@index',
+        '/framework/public/user/:id/profile/:profile' => 'ExampleController@user'
     ],
     'post' => [
 
     ],
     'cli' => [
-        '' => '\App\Controllers\Console\ConsoleRouter@index'
+        '' => 'Console\ConsoleRouter@index'
     ]
 ];

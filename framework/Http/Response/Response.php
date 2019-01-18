@@ -9,6 +9,7 @@ class Response implements ResponseInterface
     protected $cookies = [];
     protected $body = '';
     protected $data = [];
+    protected $cache = 1;
 
     public function getHeaders():array {
         return $this->headers;
@@ -47,5 +48,10 @@ class Response implements ResponseInterface
     public function getCookies(): array
     {
         return $this->cookies;
+    }
+
+    public function noCache() {
+        $this->cache = 0;
+        return $this;
     }
 }

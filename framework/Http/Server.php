@@ -8,7 +8,7 @@ class Server extends RequestData
     }
 
     public function getPath():string {
-        return $this['REQUEST_URI'] ?? '';
+        return parse_url($this['REQUEST_URI'] ?? '', PHP_URL_PATH);
     }
 
 }

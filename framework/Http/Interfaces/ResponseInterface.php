@@ -11,12 +11,14 @@ interface ResponseInterface
 
     public function addData($key, $value);
 
-    public function getCookies():array;
+    public function getCookies(): array;
 
-    public function getHeaders():array;
+    public function getHeaders(): array;
 
-    public function getBody():string;
+    public function getBody(): string;
 
-    public function getData():array;
+    public function getData(): array;
+
+    public function noCache();
 }
 

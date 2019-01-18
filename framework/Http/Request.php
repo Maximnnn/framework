@@ -27,6 +27,11 @@ class Request implements RequestInterface
         return strtolower($this->server->method());
     }
 
+    /**
+     * @param string|null $key
+     * @param null $default
+     * @return Get|mixed|null
+     */
     public function get(string $key = null, $default = null)
     {
         return $key ? ($this->get->$key ?? $default) : $this->get;

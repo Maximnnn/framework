@@ -2,12 +2,15 @@
 namespace Framework\Http\Routes;
 
 use Framework\Exceptions\BaseException;
+use Framework\Http\Interfaces\ResponseInterface;
+use Framework\Pipeline\Pipeline;
 
 class Route
 {
     protected $path;
     protected $closure;
     protected $middleware = [];
+    protected $params = [];
 
     public function __construct($path, $closure)
     {
@@ -15,6 +18,10 @@ class Route
         $this->closure = $closure;
     }
 
+    public function addParams($params) {
+        $this->params = $params;
+        return $this;
+    }
     public function getPath() {
         return $this->path;
     }
@@ -25,29 +32,29 @@ class Route
         return $this->middleware;
     }
     public function middleware(array $middleware) {
-        $this->middleware = $middleware;
+        $this->middleware = array_merge($this->middleware, $middleware);
         return $this;
     }
 
-    public function run() {
+    public function run():ResponseInterface {
 
-        if (is_string($this->closure)) {
+        $this->middleware[] = $this->closure;
 
-            $controller = explode('@', $this->closure);
-            $class = $controller[0];
-            $method = $controller[1];
+        $pipeline = new Pipeline();
 
-            $params = new \ReflectionMethod($class, $method);
-
-            return app()->make($class)->$method($params);
-        } else if (is_callable($this->closure)) {
-
-            $ref = new \ReflectionFunction($this->closure);
-            $params = app()->resolveParameters($ref->getParameters());
-
-            return ($this->closure)(...$params);
+        foreach ($this->middleware as $string) {
+            $string = explode('@', $string);
+            $class = CONTROLLERS_NAMESPACE . $string[0];
+            $method = $string[1] ?? 'callNext';
+            $pipeline->add($class, $method);
         }
+
+        $response = $pipeline->pipe($this->params);
+
+        if ($response instanceof ResponseInterface)
+            return $response;
 
         throw app()->make(BaseException::class, ['unknown route method type']);
     }
+
 }

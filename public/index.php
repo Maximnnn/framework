@@ -4,6 +4,8 @@ require_once '../vendor/autoload.php';
 require_once '../framework/functions.php';
 
 define('ROOT_DIR', dirname(__DIR__));
+define('CONTROLLERS_NAMESPACE', '\\App\\Controllers\\');
+define('PRODUCTION', false); //todo from env
 
 $pipeline = new \Framework\Pipeline\Pipeline();
 
@@ -17,7 +19,7 @@ $singletons = [
     \Framework\Http\Routes\Router::class => function() {
         $router = new \Framework\Http\Routes\Router();
 
-        $methodArr = require_once ROOT_DIR . '/config/routes.php';
+        $methodArr = require_once ROOT_DIR . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'routes.php';
 
         foreach ($methodArr as $method => $routesArr) {
             if (method_exists($router, $method)) {
@@ -34,6 +36,7 @@ $singletons = [
 
         try {
             return $pipeline
+                ->add(\Framework\Http\Middleware\SessionHandler::class)
                 ->add(\Framework\Http\Middleware\RouteHandler::class)
                 ->add(\Framework\Http\Middleware\RouteNotFoundHandler::class)
                 ->pipe();
