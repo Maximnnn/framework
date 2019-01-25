@@ -8,6 +8,6 @@ return [
 
     ],
     'cli' => [
-        '' => 'Console\ConsoleRouter@index'
+        '' => 'Console\\ConsoleRouter@index'
     ]
 ];
