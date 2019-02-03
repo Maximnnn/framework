@@ -1,8 +1,12 @@
 <?php
 $singletons = [
+    \Framework\Container::class => function() {return \Framework\Container::instance();},
+
     \Framework\Http\Request::class => function(\Framework\Container $container) {
         return $container->make(Framework\Factories\RequestFactory::class)->fromGlobals();
     },
+
+    \Framework\Http\Session::class => null,
 
     Framework\Factories\RequestFactory::class => null,
 
@@ -37,6 +41,10 @@ $singletons = [
         }
 
         return $response;
+    },
+
+    \Framework\Settings::class => function() {
+        return \Framework\Settings::instance(require ROOT_DIR . '/env.php');
     }
 ];
 

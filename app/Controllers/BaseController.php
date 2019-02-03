@@ -8,7 +8,7 @@ use Framework\Http\Response\JsonResponse;
 use Framework\Http\Response\SmartyResponse;
 use Framework\Pipeline\Handler;
 
-class BaseController extends Handler
+abstract class BaseController extends Handler
 {
     protected $request;
     protected $viewData = [];

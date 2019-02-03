@@ -1,8 +1,8 @@
 <?php
 namespace Framework\Factories;
 
-use Framework\Http\Cookies;
-use Framework\Http\Files;
+use Framework\Collection;
+use Framework\Http\File;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Http\Request;
@@ -15,10 +15,10 @@ class RequestFactory
         return new Request(
             new Get($_GET),
             new Post($_POST),
-            new Files($_FILES),
+            new Collection(array_map(function($file) {return new File($file);}, $_FILES)),
             new Server($_SERVER),
             new Session($_SESSION ?? []),
-            new Cookies($_COOKIE)
+            new Collection($_COOKIE)
         );
     }
 }

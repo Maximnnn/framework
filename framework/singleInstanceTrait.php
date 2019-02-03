@@ -7,7 +7,8 @@ trait singleInstanceTrait
     protected static $instance;
 
     /**
-     * @return static
+     * @param $parameters
+     * @return mixed
      */
     public static function instance() {
         if (!static::$instance) {

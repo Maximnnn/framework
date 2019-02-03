@@ -31,12 +31,17 @@ class Route
     public function getMiddleware(){
         return $this->middleware;
     }
-    public function middleware(array $middleware) {
+    public function middleware($middleware) {
+        if (!is_array($middleware))
+            $middleware = [$middleware];
         $this->middleware = array_merge($this->middleware, $middleware);
         return $this;
     }
 
     public function run():ResponseInterface {
+
+        if (is_string($this->closure))
+            $this->closure = CONTROLLERS_NAMESPACE . $this->closure;
 
         $this->middleware[] = $this->closure;
 
@@ -44,7 +49,7 @@ class Route
 
         foreach ($this->middleware as $string) {
             $string = explode('@', $string);
-            $class = CONTROLLERS_NAMESPACE . $string[0];
+            $class = $string[0];
             $method = $string[1] ?? 'callNext';
             $pipeline->add($class, $method);
         }

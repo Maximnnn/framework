@@ -1,6 +1,7 @@
 <?php
 namespace Framework\Http;
 
+use Framework\Collection;
 use Framework\Http\Interfaces\RequestInterface;
 
 class Request implements RequestInterface
@@ -12,7 +13,7 @@ class Request implements RequestInterface
     protected $session;
     protected $cookies;
 
-    public function __construct(Get $get,Post $post,Files $files, Server $server,Session $session,Cookies $cookies)
+    public function __construct(Get $get,Post $post, Collection $files, Server $server, Session $session, Collection $cookies)
     {
         $this->get = $get;
         $this->post = $post;

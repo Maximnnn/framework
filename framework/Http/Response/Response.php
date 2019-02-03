@@ -1,36 +1,48 @@
 <?php
 namespace Framework\Http\Response;
 
+use Framework\Collection;
+use Framework\Http\Cookie;
+use Framework\Http\Header;
 use Framework\Http\Interfaces\ResponseInterface;
 
 class Response implements ResponseInterface
 {
-    protected $headers = [];
-    protected $cookies = [];
+    /**@var $headers Collection*/
+    protected $headers;
+    /**@var $cookies Collection*/
+    protected $cookies;
     protected $body = '';
     protected $data = [];
     protected $cache = 1;
 
-    public function getHeaders():array {
+    public function __construct() {
+        $this->headers = app()->make(Collection::class);
+        $this->cookies = app()->make(Collection::class);
+    }
+
+    public function getHeaders() :Collection {
         return $this->headers;
     }
 
-    public function getBody():string {
+    public function getBody(): string {
         return $this->body;
     }
 
-    public function getData():array {
+    public function getData(): array {
         return $this->data;
     }
 
-    public function setCookie($key, $value, $expire, $path, $domain, $secure, $httpOnly)
+    public function setCookie(Cookie $cookie)
     {
-        // TODO: Implement setCookie() method.
+        $this->cookies->append($cookie);
+        return $this;
     }
 
-    public function setHeader()
+    public function setHeader(Header $header)
     {
-        // TODO: Implement setHeader() method.
+        $this->headers->append($header);
+        return $this;
     }
 
     public function addBody(string $string)
@@ -45,7 +57,7 @@ class Response implements ResponseInterface
         return $this;
     }
 
-    public function getCookies(): array
+    public function getCookies(): Collection
     {
         return $this->cookies;
     }

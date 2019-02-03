@@ -5,6 +5,7 @@ class JsonResponse extends Response
 {
     public function __construct($data = [])
     {
+        parent::__construct();
         $this->data = $data;
     }
 

@@ -15,7 +15,7 @@ class BaseException extends \Exception
         parent::__construct($message, $code, $previous);
     }
 
-    public function resolve():ResponseInterface {
+    public function resolve(): ResponseInterface {
 
         if (app()->make(Request::class)->wantsJson())
             return new JsonResponse(['success' => false, 'message' => $this->getMessage()]);

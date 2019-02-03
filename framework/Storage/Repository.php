@@ -1,6 +1,7 @@
 <?php
 namespace Framework\Storage;
 
+use Framework\Collection;
 
 abstract class Repository {
     protected $storage;
@@ -11,5 +12,6 @@ abstract class Repository {
     public function save(Model $model){}
     public function update(Model $model){}
     public function delete(Model $model){}
-    public function get(){}
+    public function get(QueryBuilderInterface $builder): Collection
+    {}
 }

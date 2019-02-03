@@ -4,7 +4,7 @@ namespace Framework\Http;
 
 use Framework\Collection;
 
-class Cookies extends Collection
+class Cookie extends Collection
 {
 
 }

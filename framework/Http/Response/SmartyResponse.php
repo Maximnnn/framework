@@ -14,6 +14,7 @@ class SmartyResponse extends Response
 
     public function __construct(string $template = '', array $data = [])
     {
+        parent::__construct();
         $this->smarty = app()->make(Smarty::class);
         $this->template = $template . '.tpl';
         $this->data = $data;
