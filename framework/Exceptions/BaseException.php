@@ -5,6 +5,7 @@ use Framework\Http\Interfaces\ResponseInterface;
 use Framework\Http\Request;
 use Framework\Http\Response\ErrorResponse;
 use Framework\Http\Response\JsonResponse;
+use Framework\Storage\Settings;
 use Throwable;
 
 class BaseException extends \Exception

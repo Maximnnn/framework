@@ -3,7 +3,7 @@ namespace App\Controllers;
 
 use Framework\Http\Request;
 use Framework\Http\Response\JsonResponse;
-use Framework\Settings;
+
 
 class ExampleController extends BaseController
 {
@@ -17,7 +17,7 @@ class ExampleController extends BaseController
     }
 
     public function test() {
-        return new JsonResponse(Settings::instance());
+        return new JsonResponse([1,2,3]);
     }
 
 }

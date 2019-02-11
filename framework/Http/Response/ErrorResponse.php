@@ -8,4 +8,12 @@ class ErrorResponse extends Response
         parent::__construct();
         $this->body = $message;
     }
+
+    public function getBody(): string
+    {
+        if (PRODUCTION)
+            return '';
+
+        return parent::getBody();
+    }
 }

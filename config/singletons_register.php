@@ -43,8 +43,8 @@ $singletons = [
         return $response;
     },
 
-    \Framework\Settings::class => function() {
-        return \Framework\Settings::instance(require ROOT_DIR . '/env.php');
+    \Framework\Storage\Settings::class => function() {
+        return new \Framework\Storage\Settings(ROOT_DIR . '/.env');
     }
 ];
 
